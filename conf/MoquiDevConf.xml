@@ -79,4 +79,11 @@
         <repository name="main" workspace="default" username="admin" password="admin">
             <init-param name="org.apache.jackrabbit.repository.uri" value="http://localhost:8081/rmi"/></repository> -->
     </repository-list>
+
+    <user-facade>
+        <password encrypt-hash-type="SHA-256" min-length="8" min-digits="0" min-others="0"
+                  history-limit="5" change-weeks="10000000000" email-require-change="false" email-expire-hours="48"/>
+        <login-key encrypt-hash-type="SHA-256" expire-hours="144"/><!-- default expire 6 days, 144 hours -->
+        <login max-failures="3" disable-minutes="5" history-store="true" history-incorrect-password="false"/>
+    </user-facade>
 </moqui-conf>
