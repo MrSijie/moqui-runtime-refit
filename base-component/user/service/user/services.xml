@@ -1,0 +1,79 @@
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-2.1.xsd">
+
+    <service verb="create" noun="User">
+        <in-parameters>
+            <parameter name="username" required="true"><description>用户名</description></parameter>
+            <parameter name="newPassword" required="true"><description>密码</description></parameter>
+            <parameter name="newPasswordVerify" required="true"><description>重复密码</description></parameter>
+        </in-parameters>
+        <actions>
+            <service-call name="org.moqui.impl.UserServices.create#UserAccount" out-map="context" in-map="context"/>
+        </actions>
+    </service>
+
+    <service verb="login" authenticate="false">
+        <in-parameters>
+            <parameter name="username" required="true"/>
+            <parameter name="password" required="true"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="success"/>
+            <parameter name="groups"/>
+        </out-parameters>
+        <actions>
+            <set field="success" from="ec.user.loginUser(username,password)"/>
+            <if condition="success">
+                <entity-find entity-name="moqui.security.UserGroupMember" list="groups">
+                    <econdition field-name="userId" from="ec.user.userId"/>
+                </entity-find>
+            </if>
+            <set field="groups" from="groups.userGroupId"/>
+        </actions>
+    </service>
+
+    <service verb="logout" authenticate="false">
+        <actions>
+            <script>ec.user.logoutUser()</script>
+        </actions>
+    </service>
+
+    <service verb="update" noun="Password">
+        <in-parameters>
+            <parameter name="userId"/>
+            <parameter name="newPassword"/>
+        </in-parameters>
+        <actions>
+
+        </actions>
+    </service>
+
+    <service verb="get" noun="Current">
+        <out-parameters>
+            <parameter name="user"/>
+        </out-parameters>
+        <actions>
+            <set field="user" from="ec.user.userAccount"/>
+        </actions>
+    </service>
+
+    <service verb="get" noun="User">
+        <in-parameters>
+            <parameter name="userId"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="user"/>
+        </out-parameters>
+        <actions>
+            <if condition="userId">
+                <entity-find-one entity-name="moqui.security.UserAccount" value-field="user">
+                    <field-map field-name="userId" from="userId"/>
+                </entity-find-one>
+                <else>
+                    <service-call name="user.services.get#Current" out-map="context"/>
+                </else>
+            </if>
+        </actions>
+    </service>
+
+
+</services>

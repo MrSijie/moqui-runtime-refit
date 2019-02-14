@@ -19,7 +19,7 @@ along with this software (see the LICENSE.md file). If not, see
     <!-- password=moqui -->
     <moqui.security.UserAccount userId="ADMIN" username="admin" userFullName="超级管理员"
             currentPassword="85212d4be7fbcf22c89a1bc387ea0849c0897e2f98c0de14c83c07bb7250a216" passwordHashType="SHA-256"
-            passwordSalt="cVWHW-jq"/>
+            passwordSalt="cVWHW-jq"/><!--password:12345678-->
     <moqui.security.UserGroupMember userGroupId="ADMIN" userId="ADMIN" fromDate="1265184000000"/>
     <moqui.security.UserPermission userPermissionId="ExamplePerm" description="Example Permission"/>
     <moqui.security.UserGroupPermission userGroupId="ADMIN" userPermissionId="ExamplePerm"

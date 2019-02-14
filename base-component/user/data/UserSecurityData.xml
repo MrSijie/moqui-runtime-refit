@@ -1,0 +1,6 @@
+<entity-facade-xml type="seed">
+    <artifactGroups artifactGroupId="USER_API" description="User REST API (via root resource)">
+        <artifacts artifactTypeEnumId="AT_REST_PATH" inheritAuthz="Y" artifactName="/user"/>
+        <authz artifactAuthzId="USER_API_ALL_USERS" userGroupId="ALL_USERS" authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
+    </artifactGroups>
+</entity-facade-xml>

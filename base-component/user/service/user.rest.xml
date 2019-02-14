@@ -1,0 +1,23 @@
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/rest-api-2.1.xsd"
+          name="user" displayName="User REST API" version="${moqui_version}">
+    <resource name="createUser">
+        <method type="post" require-authentication="false">
+            <service name="user.services.create#User"/>
+        </method>
+    </resource>
+    <resource name="getUser">
+        <method type="get">
+            <service name="user.services.get#User"/>
+        </method>
+    </resource>
+    <resource name="login" require-authentication="false">
+        <method type="post" require-authentication="false">
+            <service name="user.services.login"/>
+        </method>
+    </resource>
+    <resource name="logout">
+        <method type="get">
+            <service name="user.services.logout"/>
+        </method>
+    </resource>
+</resource>
