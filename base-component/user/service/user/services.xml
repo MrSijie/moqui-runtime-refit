@@ -1,13 +1,19 @@
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-2.1.xsd">
 
-    <service verb="create" noun="User">
+    <service verb="login" noun="Prototype" authenticate="false" displayName="原生登陆">
+        <description>
+            当用户名或密码错误时会直接返回500,
+            并且不能捕获异常，所以封装一个服务在调取时忽略异常
+        </description>
         <in-parameters>
-            <parameter name="username" required="true"><description>用户名</description></parameter>
-            <parameter name="newPassword" required="true"><description>密码</description></parameter>
-            <parameter name="newPasswordVerify" required="true"><description>重复密码</description></parameter>
+            <parameter name="username" required="true"/>
+            <parameter name="password" required="true"/>
         </in-parameters>
+        <out-parameters>
+            <parameter name="success"/>
+        </out-parameters>
         <actions>
-            <service-call name="org.moqui.impl.UserServices.create#UserAccount" out-map="context" in-map="context"/>
+            <set field="success" from="ec.user.loginUser(username,password)"/>
         </actions>
     </service>
 
@@ -21,19 +27,34 @@
             <parameter name="groups"/>
         </out-parameters>
         <actions>
-            <set field="success" from="ec.user.loginUser(username,password)"/>
+            <set field="success" value="false" type="Boolean"/>
+            <service-call name="user.services.login#Prototype"  out-map="context" ignore-error="true">
+                <field-map field-name="username" from="username"/>
+                <field-map field-name="password" from="password"/>
+            </service-call>
             <if condition="success">
                 <entity-find entity-name="moqui.security.UserGroupMember" list="groups">
                     <econdition field-name="userId" from="ec.user.userId"/>
                 </entity-find>
+                <set field="groups" from="groups.userGroupId"/>
             </if>
-            <set field="groups" from="groups.userGroupId"/>
         </actions>
     </service>
 
     <service verb="logout" authenticate="false">
         <actions>
             <script>ec.user.logoutUser()</script>
+        </actions>
+    </service>
+
+    <service verb="create" noun="User">
+        <in-parameters>
+            <parameter name="username" required="true"><description>用户名</description></parameter>
+            <parameter name="newPassword" required="true"><description>密码</description></parameter>
+            <parameter name="newPasswordVerify" required="true"><description>重复密码</description></parameter>
+        </in-parameters>
+        <actions>
+            <service-call name="org.moqui.impl.UserServices.create#UserAccount" out-map="context" in-map="context"/>
         </actions>
     </service>
 
@@ -74,6 +95,5 @@
             </if>
         </actions>
     </service>
-
 
 </services>
